@@ -17,7 +17,7 @@ struct ContentView: View {
         NavigationView {
             ScrollView {
                 
-                VStack {
+                VStack(spacing: 16) {
                     Picker(selection: $isLoginMode, label: Text("Picker here")) {
                         Text("Login")
                             .tag(true)
@@ -25,36 +25,45 @@ struct ContentView: View {
                             .tag(false)
                     }.pickerStyle(SegmentedPickerStyle())
                     
-                    Button {
-                        
-                    } label: {
-                        Image(systemName: "person.fill")
-                            .font(.system(size: 64))
-                            .padding()
+                    if !isLoginMode {
+                        Button {
+                            
+                        } label: {
+                            Image(systemName: "person.fill")
+                                .font(.system(size: 64))
+                                .padding()
+                        }
                     }
-                    
-                    TextField("Email", text: $email)
-                        .keyboardType(.emailAddress)
-                        .autocapitalization(.none)
-                    SecureField("Password", text: $password)
+                    Group {
+                        TextField("Email", text: $email)
+                            .keyboardType(.emailAddress)
+                            .autocapitalization(.none)
+                        SecureField("Password", text: $password)
+                    }.padding(12)
+                    .background(.white)
                     
                     Button {
-                        
+                        print(123)
                     } label: {
                         HStack {
                             Spacer()
-                            Text("Create Account")
+                            Text(isLoginMode ? "Log In" : "Create Account")
                                 .foregroundColor(.white)
                                 .padding(.vertical, 10)
+                                .font(.system(size: 14, weight: .semibold))
                             Spacer()
                         }.background(Color.blue)
                     }
                 }
                 .padding()
             }
-            .navigationTitle("Create Account")
+            .navigationTitle(isLoginMode ? "Log In" : "Create Account")
+            .background(Color(.init(white: 0, alpha: 0.05))
+                            .ignoresSafeArea())
         }
     }
+    
+    
 }
 
 struct ContentView_Previews: PreviewProvider {
