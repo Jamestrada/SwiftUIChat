@@ -6,12 +6,17 @@
 //
 
 import SwiftUI
+import Firebase
 
-struct ContentView: View {
+struct LoginView: View {
     
     @State var isLoginMode = false
     @State var email = ""
     @State var password = ""
+    
+    init() {
+        FirebaseApp.configure()
+    }
     
     var body: some View {
         NavigationView {
@@ -43,7 +48,7 @@ struct ContentView: View {
                     .background(.white)
                     
                     Button {
-                        print(123)
+                        handleAction()
                     } label: {
                         HStack {
                             Spacer()
@@ -61,13 +66,20 @@ struct ContentView: View {
             .background(Color(.init(white: 0, alpha: 0.05))
                             .ignoresSafeArea())
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
     
-    
+    private func handleAction() {
+        if isLoginMode {
+            print("Should log into Firebase with existing credentials")
+        } else {
+            print("Register a new account inside of Firebase Auth and then store image in Storage somehow...")
+        }
+    }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        LoginView()
     }
 }

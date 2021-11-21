@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>970254030803-cno9k44l8ads7604n0rcchpeu6mrijrm.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.970254030803-cno9k44l8ads7604n0rcchpeu6mrijrm</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBAgQKQW9qAskqzSd15OtTnzSzplc6SsfE</string>
+	<key>GCM_SENDER_ID</key>
+	<string>970254030803</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.jamestrada.SwiftUIChat</string>
+	<key>PROJECT_ID</key>
+	<string>swiftuichatwithjames</string>
+	<key>STORAGE_BUCKET</key>
+	<string>swiftuichatwithjames.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:970254030803:ios:9fc02d75d0151d58790126</string>
+</dict>
+</plist>
