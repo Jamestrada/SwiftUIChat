@@ -165,8 +165,29 @@ struct LoginView: View {
                 }
                 self.loginStatusMessage = "Successfully stored image with url: \(url?.absoluteString ?? "")"
                 print(url?.absoluteString)
+                
+                guard let url = url else {
+                    return
+                }
+                self.storeUserInfo(imageProfileUrl: url)
             }
         }
+    }
+    
+    private func storeUserInfo(imageProfileUrl: URL) {
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {
+            return
+        }
+        let userData = ["email": self.email, "uid": uid, "profileImageUrl": imageProfileUrl.absoluteString]
+        FirebaseManager.shared.firestore.collection("users")
+            .document(uid).setData(userData) { error in
+                if let error = error {
+                    print(error)
+                    self.loginStatusMessage = "\(error)"
+                    return
+                }
+                print("Success")
+            }
     }
 }
 
