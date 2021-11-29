@@ -44,6 +44,18 @@ class MainMessagesViewModel: ObservableObject {
 //            self.errorMessage = chatUser.profileImageUrl
         }
     }
+    
+    @Published var isUserCurrentlyLoggedOut = false
+    
+    func handleSignOut() {
+        do {
+            try FirebaseManager.shared.auth.signOut()
+            isUserCurrentlyLoggedOut.toggle()
+        }
+        catch {
+            print(error)
+        }
+    }
 }
 
 struct MainMessagesView: View {
@@ -106,9 +118,13 @@ struct MainMessagesView: View {
             .init(title: Text("Settings"), message: Text("What do you want to do?"), buttons: [
                 .destructive(Text("Sign out"), action: {
                     print("handle sign out")
+                    vm.handleSignOut()
                 }),
                     .cancel()
             ])
+        }
+        .fullScreenCover(isPresented: $vm.isUserCurrentlyLoggedOut, onDismiss: nil) {
+            LoginView()
         }
     }
     
