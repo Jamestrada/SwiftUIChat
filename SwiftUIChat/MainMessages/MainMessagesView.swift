@@ -18,10 +18,14 @@ class MainMessagesViewModel: ObservableObject {
     @Published var chatUser: ChatUser?
     
     init() {
+        DispatchQueue.main.async {
+            self.isUserCurrentlyLoggedOut = FirebaseManager.shared.auth.currentUser?.uid == nil
+        }
+        
         fetchCurrentUser()
     }
     
-    private func fetchCurrentUser() {
+    func fetchCurrentUser() {
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {
             self.errorMessage = "Could not find firebase uid"
             return
@@ -124,7 +128,10 @@ struct MainMessagesView: View {
             ])
         }
         .fullScreenCover(isPresented: $vm.isUserCurrentlyLoggedOut, onDismiss: nil) {
-            LoginView()
+            LoginView(didCompleteLoginProcess: {
+                self.vm.isUserCurrentlyLoggedOut = false
+                self.vm.fetchCurrentUser()
+            })
         }
     }
     
