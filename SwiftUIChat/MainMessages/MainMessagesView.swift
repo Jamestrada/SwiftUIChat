@@ -8,14 +8,11 @@
 import SwiftUI
 import SDWebImageSwiftUI
 
-struct ChatUser {
-    let uid, email, profileImageUrl: String
-}
-
 class MainMessagesViewModel: ObservableObject {
     
     @Published var errorMessage = ""
     @Published var chatUser: ChatUser?
+    @Published var isUserCurrentlyLoggedOut = false
     
     init() {
         DispatchQueue.main.async {
@@ -41,15 +38,11 @@ class MainMessagesViewModel: ObservableObject {
                 self.errorMessage = "No data found"
                 return
             }
-            let uid = data["uid"] as? String ?? ""
-            let email = data["email"] as? String ?? ""
-            let profileImageUrl = data["profileImageUrl"] as? String ?? ""
-            self.chatUser = ChatUser(uid: uid, email: email, profileImageUrl: profileImageUrl)
+            
+            self.chatUser = .init(data: data)
 //            self.errorMessage = chatUser.profileImageUrl
         }
     }
-    
-    @Published var isUserCurrentlyLoggedOut = false
     
     func handleSignOut() {
         do {
