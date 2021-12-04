@@ -178,9 +178,14 @@ struct MainMessagesView: View {
                 .shadow(radius: 15)
         }
         .fullScreenCover(isPresented: $shouldShowNewMessageScreen, onDismiss: nil) {
-            CreateNewMessageView()
+            CreateNewMessageView(didSelectNewUser: { user in
+                print(user.email)
+                self.chatUser = user
+            })
         }
     }
+    
+    @State var chatUser: ChatUser?
 }
 
 struct MainMessagesView_Previews: PreviewProvider {

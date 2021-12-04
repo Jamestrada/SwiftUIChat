@@ -27,7 +27,7 @@ class CreateNewMessageViewModel: ObservableObject {
             documentsSnapshot?.documents.forEach({ snapshot in
                 let data = snapshot.data()
                 let user = ChatUser(data: data)
-                // remove current user form new message view
+                // remove current user from new message view
                 if user.uid != FirebaseManager.shared.auth.currentUser?.uid {
                     self.users.append(.init(data: data))
                 }
@@ -39,6 +39,8 @@ class CreateNewMessageViewModel: ObservableObject {
 }
 
 struct CreateNewMessageView: View {
+    
+    let didSelectNewUser: (ChatUser) -> ()
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -52,6 +54,7 @@ struct CreateNewMessageView: View {
                 ForEach(vm.users) { user in
                     Button {
                         presentationMode.wrappedValue.dismiss()
+                        didSelectNewUser(user)
                     } label: {
                         HStack(spacing: 16) {
                             WebImage(url: URL(string: user.profileImageUrl))
