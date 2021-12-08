@@ -7,22 +7,27 @@
 
 import SwiftUI
 
+class ChatLogViewModel: ObservableObject {
+    
+    @Published var chatText = ""
+    
+    init() {
+        
+    }
+    
+    func handleSend() {
+        print(chatText)
+    }
+}
+
 struct ChatLogView: View {
     
     let chatUser: ChatUser?
     
-    @State var chatText = ""
+    @ObservedObject var vm = ChatLogViewModel()
     
     var body: some View {
         messagesView
-//        ZStack {
-//
-//            VStack(spacing: 0) {
-//                Spacer()
-//                chatBottomBar
-//                    .background(.white)
-//            }
-//        }
         .navigationTitle(chatUser?.email ?? "")
             .navigationBarTitleDisplayMode(.inline)
     }
@@ -62,9 +67,14 @@ struct ChatLogView: View {
             Image(systemName: "photo.on.rectangle.angled")
                 .font(.system(size: 24))
                 .foregroundColor(Color(.darkGray))
-            TextField("Description", text: $chatText)
+            ZStack {
+                DescriptionPlaceholder()
+                TextEditor(text: $vm.chatText)
+                    .opacity(vm.chatText.isEmpty ? 0.5 : 1)
+            }
+            .frame(height: 40)
             Button {
-                
+                vm.handleSend()
             } label: {
                 Text("Send")
                     .foregroundColor(.white)
@@ -77,6 +87,19 @@ struct ChatLogView: View {
         }
         .padding(.horizontal)
         .padding(.vertical, 8)
+    }
+}
+
+private struct DescriptionPlaceholder: View {
+    var body: some View {
+        HStack {
+            Text("Description")
+                .foregroundColor(Color(.gray))
+                .font(.system(size: 17))
+                .padding(.leading, 5)
+                .padding(.top, -4)
+            Spacer()
+        }
     }
 }
 
