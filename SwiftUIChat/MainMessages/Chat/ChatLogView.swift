@@ -15,10 +15,14 @@ struct FirebaseConstants {
     static let timestamp = "timestamp"
 }
 
-struct ChatMessage {
+struct ChatMessage: Identifiable {
+    var id: String { documentId }
+    
+    let documentId: String
     let fromId, toId, text: String
     
-    init(data: [String: Any]) {
+    init(documentId: String, data: [String: Any]) {
+        self.documentId = documentId
         self.fromId = data[FirebaseConstants.fromId] as? String ?? ""
         self.toId = data[FirebaseConstants.toId] as? String ?? ""
         self.text = data[FirebaseConstants.text] as? String ?? ""
@@ -60,11 +64,21 @@ class ChatLogViewModel: ObservableObject {
                     return
                 }
                 
-                querySnapshot?.documents.forEach({ queryDocumentSnapshot in
-                    let data = queryDocumentSnapshot.data()
-                    let chatMessage = ChatMessage(data: data)
-                    self.chatMessages.append(chatMessage)
+                querySnapshot?.documentChanges.forEach({ change in
+                    if change.type == .added {
+                        let data = change.document.data()
+                        let chatMessage = ChatMessage(documentId: change.document.documentID, data: data)
+                        self.chatMessages.append(chatMessage)
+                    }
                 })
+                
+//                This fetches all messages every time a message is sent
+//                querySnapshot?.documents.forEach({ queryDocumentSnapshot in
+//                    let data = queryDocumentSnapshot.data()
+//                    let docId = queryDocumentSnapshot.documentID
+//                    let chatMessage = ChatMessage(documentId: docId, data: data)
+//                    self.chatMessages.append(chatMessage)
+//                })
             }
     }
     
@@ -135,11 +149,11 @@ struct ChatLogView: View {
     
     private var messagesView: some View {
         ScrollView {
-            ForEach(0..<20) { num in
+            ForEach(vm.chatMessages) { message in
                 HStack {
                     Spacer()
                     HStack {
-                        Text("messages wil go here")
+                        Text(message.text)
                             .foregroundColor(.white)
                     }
                     .padding()
@@ -206,8 +220,9 @@ private struct DescriptionPlaceholder: View {
 
 struct ChatLogView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView {
-            ChatLogView(chatUser: .init(data: ["uid": "dIykUtorR8Oo2nrO5ejZd4gbJaJ3", "email": "waterfall@gmail.com"]))
-        }
+//        NavigationView {
+//            ChatLogView(chatUser: .init(data: ["uid": "dIykUtorR8Oo2nrO5ejZd4gbJaJ3", "email": "waterfall@gmail.com"]))
+//        }
+        MainMessagesView()
     }
 }
