@@ -57,6 +57,7 @@ class ChatLogViewModel: ObservableObject {
             .collection("messages")
             .document(fromId)
             .collection(toId)
+            .order(by: "timestamp")
             .addSnapshotListener { querySnapshot, error in
                 if let error = error {
                     self.errorMessage = "Failed to listen for messages: \(error)"
@@ -150,15 +151,31 @@ struct ChatLogView: View {
     private var messagesView: some View {
         ScrollView {
             ForEach(vm.chatMessages) { message in
-                HStack {
-                    Spacer()
-                    HStack {
-                        Text(message.text)
-                            .foregroundColor(.white)
+                VStack {
+                    if message.fromId == FirebaseManager.shared.auth.currentUser?.uid {
+                        HStack {
+                            Spacer()
+                            HStack {
+                                Text(message.text)
+                                    .foregroundColor(.white)
+                            }
+                            .padding()
+                            .background(Color.blue)
+                            .cornerRadius(8)
+                        }
                     }
-                    .padding()
-                    .background(.blue)
-                    .cornerRadius(8)
+                    else {
+                        HStack {
+                            HStack {
+                                Text(message.text)
+                                    .foregroundColor(.black)
+                            }
+                            .padding()
+                            .background(Color.white)
+                            .cornerRadius(8)
+                            Spacer()
+                        }
+                    }
                 }
                 .padding(.horizontal)
                 .padding(.top, 8)
