@@ -142,7 +142,7 @@ struct LoginView: View {
         let ref = FirebaseManager.shared.storage.reference(withPath: uid)
         
         guard let imageData = self.image?.jpegData(compressionQuality: 0.5) else {
-            return
+            return 
         }
         ref.putData(imageData, metadata: nil) { metadata, error in
             if let error = error {
