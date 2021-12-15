@@ -10,7 +10,7 @@ import Firebase
 
 class FirebaseManager: NSObject {
     
-    let auth: Auth
+    let auth: 
     let storage: Storage
     let firestore: Firestore
     
