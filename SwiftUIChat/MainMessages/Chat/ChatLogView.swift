@@ -145,13 +145,15 @@ class ChatLogViewModel: ObservableObject {
             return
         }
         
-        let document = FirebaseManager.shared.firestore
+        
+        // sender
+        let documentSender = FirebaseManager.shared.firestore
             .collection("recent_messages")
             .document(uid)
             .collection("messages")
             .document(toId)
         
-        let data = [
+        let dataSender = [
             FirebaseConstants.timestamp: Timestamp(),
             FirebaseConstants.text: self.chatText,
             FirebaseConstants.fromId: uid,
@@ -160,7 +162,31 @@ class ChatLogViewModel: ObservableObject {
             FirebaseConstants.email: chatUser.email
         ] as [String : Any]
         
-        document.setData(data) { error in
+        documentSender.setData(dataSender) { error in
+            if let error = error {
+                self.errorMessage = "Failed to save recent message: \(error)"
+                print("Failed to save recent message: \(error)")
+                return
+            }
+        }
+        
+        // recipient
+        let documentRecipient = FirebaseManager.shared.firestore
+            .collection("recent_messages")
+            .document(toId)
+            .collection("messages")
+            .document(uid)
+        
+        let dataRecipient = [
+            FirebaseConstants.timestamp: Timestamp(),
+            FirebaseConstants.text: self.chatText,
+            FirebaseConstants.fromId: uid,
+            FirebaseConstants.toId: toId,
+            FirebaseConstants.profileImageUrl: chatUser.profileImageUrl,
+            FirebaseConstants.email: chatUser.email
+        ] as [String : Any]
+        
+        documentRecipient.setData(dataRecipient) { error in
             if let error = error {
                 self.errorMessage = "Failed to save recent message: \(error)"
                 print("Failed to save recent message: \(error)")
