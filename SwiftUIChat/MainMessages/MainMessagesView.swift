@@ -8,25 +8,7 @@
 import SwiftUI
 import SDWebImageSwiftUI
 import Firebase
-
-struct RecentMessage: Identifiable {
-    
-    var id: String { documentId }
-    
-    let documentId: String
-    let text, fromId, toId, email, profileImageUrl: String
-    let timestamp: Timestamp
-    
-    init(documentId: String, data: [String: Any]) {
-        self.documentId = documentId
-        self.text = data["text"] as? String ?? ""
-        self.fromId = data["fromId"] as? String ?? ""
-        self.toId = data["toId"] as? String ?? ""
-        self.email = data["email"] as? String ?? ""
-        self.profileImageUrl = data["profileImageUrl"] as? String ?? ""
-        self.timestamp = data["timestamp"] as? Timestamp ?? Timestamp(date: Date())
-    }
-}
+import FirebaseFirestoreSwift
 
 class MainMessagesViewModel: ObservableObject {
     
@@ -71,7 +53,15 @@ class MainMessagesViewModel: ObservableObject {
                         self.recentMessages.remove(at: index)
                     }
                     
-                    self.recentMessages.insert(.init(documentId: docId, data: change.document.data()), at: 0)
+                    do {
+                        if let rm = try change.document.data(as: RecentMessage.self) {
+                            self.recentMessages.insert(rm, at: 0)
+                        }
+                    } catch {
+                        print(error)
+                    }
+                    
+//                    self.recentMessages.insert(.init(documentId: docId, data: change.document.data()), at: 0)
                 })
             }
     }

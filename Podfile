@@ -10,6 +10,7 @@ target 'SwiftUIChat' do
   pod 'Firebase/Core'
   pod 'Firebase/Auth'
   pod 'SDWebImageSwiftUI'
+  pod 'FirebaseFirestoreSwift' 
 
   # Pods for SwiftUIChat
 
