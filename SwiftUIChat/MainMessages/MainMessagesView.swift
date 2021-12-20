@@ -48,7 +48,7 @@ class MainMessagesViewModel: ObservableObject {
                     let docId = change.document.documentID
                     
                     if let index = self.recentMessages.firstIndex(where: { recentMessage in
-                        return recentMessage.documentId == docId
+                        return recentMessage.id == docId
                     }) {
                         self.recentMessages.remove(at: index)
                     }
@@ -60,8 +60,6 @@ class MainMessagesViewModel: ObservableObject {
                     } catch {
                         print(error)
                     }
-                    
-//                    self.recentMessages.insert(.init(documentId: docId, data: change.document.data()), at: 0)
                 })
             }
     }
@@ -200,6 +198,7 @@ struct MainMessagesView: View {
                                 Text(recentMessage.email)
                                     .font(.system(size: 16, weight: .bold))
                                     .foregroundColor(Color(.label))
+                                    .multilineTextAlignment(.leading)
                                 Text(recentMessage.text)
                                     .font(.system(size: 14))
                                     .foregroundColor(Color(.darkGray))
@@ -207,7 +206,7 @@ struct MainMessagesView: View {
                             }
                             Spacer()
                             
-                            Text("22d")
+                            Text(recentMessage.timestamp.description)
                                 .font(.system(size: 14, weight: .semibold))
                         }
                     }
