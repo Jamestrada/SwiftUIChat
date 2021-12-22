@@ -206,8 +206,9 @@ struct MainMessagesView: View {
                             }
                             Spacer()
                             
-                            Text(recentMessage.timestamp.description)
+                            Text(recentMessage.timeAgo)
                                 .font(.system(size: 14, weight: .semibold))
+                                .foregroundColor(Color(.label))
                         }
                     }
                     Divider()

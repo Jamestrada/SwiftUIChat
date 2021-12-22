@@ -17,20 +17,6 @@ struct FirebaseConstants {
     static let profileImageUrl = "profileImageUrl"
 }
 
-struct ChatMessage: Identifiable {
-    var id: String { documentId }
-    
-    let documentId: String
-    let fromId, toId, text: String
-    
-    init(documentId: String, data: [String: Any]) {
-        self.documentId = documentId
-        self.fromId = data[FirebaseConstants.fromId] as? String ?? ""
-        self.toId = data[FirebaseConstants.toId] as? String ?? ""
-        self.text = data[FirebaseConstants.text] as? String ?? ""
-    }
-}
-
 class ChatLogViewModel: ObservableObject {
     
     @Published var chatText = ""
@@ -69,9 +55,14 @@ class ChatLogViewModel: ObservableObject {
                 
                 querySnapshot?.documentChanges.forEach({ change in
                     if change.type == .added {
-                        let data = change.document.data()
-                        let chatMessage = ChatMessage(documentId: change.document.documentID, data: data)
-                        self.chatMessages.append(chatMessage)
+                        do {
+                            if let cm = try change.document.data(as: ChatMessage.self) {
+                                self.chatMessages.append(cm)
+                                print("Appending chatMessage in ChatLogView: \(Date())")
+                            }
+                        } catch {
+                            print("Failed to decode message: \(error)")
+                        }
                     }
                 })
                 
