@@ -28,13 +28,16 @@ class MainMessagesViewModel: ObservableObject {
     
     @Published var recentMessages = [RecentMessage]()
     
+    private var firestoreListener: ListenerRegistration?
+    
     func fetchRecentMessages() {
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {
             return
         }
+        firestoreListener?.remove()
         self.recentMessages.removeAll()
         
-        FirebaseManager.shared.firestore
+        firestoreListener = FirebaseManager.shared.firestore
             .collection("recent_messages")
             .document(uid)
             .collection("messages")
@@ -107,6 +110,8 @@ struct MainMessagesView: View {
     
     @ObservedObject private var vm = MainMessagesViewModel()
     
+    private var chatLogViewModel = ChatLogViewModel(chatUser: nil)
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -115,7 +120,7 @@ struct MainMessagesView: View {
                 messagesView
                 
                 NavigationLink("", isActive: $shouldNavigateToChatLogView) {
-                    ChatLogView(chatUser: self.chatUser)
+                    ChatLogView(vm: chatLogViewModel)
                 }
             }
             .overlay(
@@ -245,6 +250,8 @@ struct MainMessagesView: View {
                 print(user.email)
                 self.shouldNavigateToChatLogView.toggle()
                 self.chatUser = user
+                self.chatLogViewModel.chatUser = user
+                self.chatLogViewModel.fetchMessages()
             })
         }
     }

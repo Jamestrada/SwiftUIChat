@@ -24,7 +24,7 @@ class ChatLogViewModel: ObservableObject {
     
     @Published var chatMessages = [ChatMessage]()
     
-    let chatUser: ChatUser?
+    var chatUser: ChatUser?
     
     init(chatUser: ChatUser?) {
         self.chatUser = chatUser
@@ -32,7 +32,9 @@ class ChatLogViewModel: ObservableObject {
         fetchMessages()
     }
     
-    private func fetchMessages() {
+    var firestoreListener: ListenerRegistration?
+    
+    func fetchMessages() {
         guard let fromId = FirebaseManager.shared.auth.currentUser?.uid else {
             return
         }
@@ -41,7 +43,7 @@ class ChatLogViewModel: ObservableObject {
             return
         }
         
-        FirebaseManager.shared.firestore
+        firestoreListener = FirebaseManager.shared.firestore
             .collection("messages")
             .document(fromId)
             .collection(toId)
@@ -191,12 +193,12 @@ class ChatLogViewModel: ObservableObject {
 
 struct ChatLogView: View {
     
-    let chatUser: ChatUser?
-    
-    init(chatUser: ChatUser?) {
-        self.chatUser = chatUser
-        self.vm = .init(chatUser: chatUser)
-    }
+//    let chatUser: ChatUser?
+//
+//    init(chatUser: ChatUser?) {
+//        self.chatUser = chatUser
+//        self.vm = .init(chatUser: chatUser)
+//    }
     
     @ObservedObject var vm: ChatLogViewModel
     
@@ -205,8 +207,11 @@ struct ChatLogView: View {
             messagesView
             Text(vm.errorMessage)
         }
-        .navigationTitle(chatUser?.email ?? "")
+        .navigationTitle(vm.chatUser?.email ?? "")
             .navigationBarTitleDisplayMode(.inline)
+            .onDisappear {
+                vm.firestoreListener?.remove()
+            }
     }
     
     static let emptyScrollToString = "Empty"
