@@ -8,15 +8,6 @@
 import SwiftUI
 import Firebase
 
-struct FirebaseConstants {
-    static let fromId = "fromId"
-    static let toId = "toId"
-    static let text = "text"
-    static let timestamp = "timestamp"
-    static let email = "email"
-    static let profileImageUrl = "profileImageUrl"
-}
-
 class ChatLogViewModel: ObservableObject {
     
     @Published var chatText = ""

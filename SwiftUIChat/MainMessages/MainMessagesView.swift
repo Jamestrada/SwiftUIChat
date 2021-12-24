@@ -188,8 +188,14 @@ struct MainMessagesView: View {
         ScrollView {
             ForEach(vm.recentMessages) { recentMessage in
                 VStack {
-                    NavigationLink {
-                        Text("Destination")
+//                    NavigationLink {
+//                        Text("Destination")
+                    Button {
+                        let uid = FirebaseManager.shared.auth.currentUser?.uid == recentMessage.fromId ? recentMessage.toId : recentMessage.fromId
+                        self.chatUser = .init(data: [FirebaseConstants.email: recentMessage.email,
+                                                     FirebaseConstants.profileImageUrl: recentMessage.profileImageUrl,
+                                                     FirebaseConstants.uid: uid])
+                        self.shouldNavigateToChatLogView.toggle()
                     } label: {
                         HStack(spacing: 16) {
                             WebImage(url: URL(string: recentMessage.profileImageUrl))
