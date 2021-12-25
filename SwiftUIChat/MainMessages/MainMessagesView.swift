@@ -195,6 +195,8 @@ struct MainMessagesView: View {
                         self.chatUser = .init(data: [FirebaseConstants.email: recentMessage.email,
                                                      FirebaseConstants.profileImageUrl: recentMessage.profileImageUrl,
                                                      FirebaseConstants.uid: uid])
+                        self.chatLogViewModel.chatUser = self.chatUser
+                        self.chatLogViewModel.fetchMessages()
                         self.shouldNavigateToChatLogView.toggle()
                     } label: {
                         HStack(spacing: 16) {

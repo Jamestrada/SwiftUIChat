@@ -33,7 +33,8 @@ class ChatLogViewModel: ObservableObject {
         guard let toId = chatUser?.uid else {
             return
         }
-        
+        firestoreListener?.remove()
+        chatMessages.removeAll()
         firestoreListener = FirebaseManager.shared.firestore
             .collection("messages")
             .document(fromId)
