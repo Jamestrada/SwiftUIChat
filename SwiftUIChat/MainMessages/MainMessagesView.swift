@@ -38,10 +38,10 @@ class MainMessagesViewModel: ObservableObject {
         self.recentMessages.removeAll()
         
         firestoreListener = FirebaseManager.shared.firestore
-            .collection("recent_messages")
+            .collection(FirebaseConstants.recentMessages)
             .document(uid)
-            .collection("messages")
-            .order(by: "timestamp")
+            .collection(FirebaseConstants.messages)
+            .order(by: FirebaseConstants.timestamp)
             .addSnapshotListener { querySnapshot, error in
                 if let error = error {
                     self.errorMessage = "Failed to listen for recent messages: \(error)"
@@ -75,7 +75,7 @@ class MainMessagesViewModel: ObservableObject {
             return
         }
         
-        FirebaseManager.shared.firestore.collection("users").document(uid).getDocument { snapshot, error in
+        FirebaseManager.shared.firestore.collection(FirebaseConstants.users).document(uid).getDocument { snapshot, error in
             if let error = error {
                 self.errorMessage = "Failed to fetch current user: \(error)"
                 print("Failed to fetch current user:", error)

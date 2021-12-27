@@ -170,7 +170,7 @@ struct LoginView: View {
             return
         }
         let userData = ["email": self.email, "uid": uid, "profileImageUrl": imageProfileUrl.absoluteString]
-        FirebaseManager.shared.firestore.collection("users")
+        FirebaseManager.shared.firestore.collection(FirebaseConstants.users)
             .document(uid).setData(userData) { error in
                 if let error = error {
                     print(error)

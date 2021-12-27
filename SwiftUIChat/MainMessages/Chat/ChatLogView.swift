@@ -36,10 +36,10 @@ class ChatLogViewModel: ObservableObject {
         firestoreListener?.remove()
         chatMessages.removeAll()
         firestoreListener = FirebaseManager.shared.firestore
-            .collection("messages")
+            .collection(FirebaseConstants.messages)
             .document(fromId)
             .collection(toId)
-            .order(by: "timestamp")
+            .order(by: FirebaseConstants.timestamp)
             .addSnapshotListener { querySnapshot, error in
                 if let error = error {
                     self.errorMessage = "Failed to listen for messages: \(error)"
@@ -85,7 +85,7 @@ class ChatLogViewModel: ObservableObject {
         }
         
         let document = FirebaseManager.shared.firestore
-                        .collection("messages")
+                        .collection(FirebaseConstants.messages)
                         .document(fromId)
                         .collection(toId)
                         .document()
@@ -107,7 +107,7 @@ class ChatLogViewModel: ObservableObject {
         }
         
         let recipientMessageDocument = FirebaseManager.shared.firestore
-                        .collection("messages")
+                        .collection(FirebaseConstants.messages)
                         .document(toId)
                         .collection(fromId)
                         .document()
@@ -133,9 +133,9 @@ class ChatLogViewModel: ObservableObject {
         
         // sender
         let documentSender = FirebaseManager.shared.firestore
-            .collection("recent_messages")
+            .collection(FirebaseConstants.recentMessages)
             .document(uid)
-            .collection("messages")
+            .collection(FirebaseConstants.messages)
             .document(toId)
         
         let dataSender = [
@@ -157,9 +157,9 @@ class ChatLogViewModel: ObservableObject {
         
         // recipient
         let documentRecipient = FirebaseManager.shared.firestore
-            .collection("recent_messages")
+            .collection(FirebaseConstants.recentMessages)
             .document(toId)
-            .collection("messages")
+            .collection(FirebaseConstants.messages)
             .document(uid)
         
         let dataRecipient = [
